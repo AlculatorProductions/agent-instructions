@@ -211,13 +211,33 @@ fi
 
 # --- next steps --------------------------------------------------------------
 
+# The `code` terminal command is NOT installed with VS Code on macOS — it is
+# added manually via the Command Palette — so fall back to `open -a`, and to a
+# download hint when VS Code is missing entirely.
+open_vscode() {
+  if command -v code >/dev/null 2>&1; then code "$TARGET"
+  else open -a "Visual Studio Code" "$TARGET"; fi
+}
+if command -v code >/dev/null 2>&1; then
+  HAVE_VSCODE=1
+  STEP1="Open the folder in VS Code:  code \"$TARGET\""
+elif [ -d "/Applications/Visual Studio Code.app" ] || [ -d "$HOME/Applications/Visual Studio Code.app" ]; then
+  HAVE_VSCODE=1
+  STEP1="Open the folder in VS Code:  open -a \"Visual Studio Code\" \"$TARGET\"
+     (tip: inside VS Code, run \"Shell Command: Install 'code' command in PATH\"
+     from the Command Palette to get the 'code' terminal command)"
+else
+  HAVE_VSCODE=0
+  STEP1="Install VS Code from https://code.visualstudio.com, open it, and use
+     File -> Open Folder on the new repository"
+fi
+
 step "Done — $TARGET"
 cat <<EOF
 
 Next steps:
 
-  1. Open the folder in VS Code:  code "$TARGET"
-     (or VS Code -> File -> Open Folder)
+  1. $STEP1
 
   2. Install the extension "Codex - OpenAI's coding agent" from the VS Code
      marketplace and sign in with your ChatGPT account. Codex reads AGENTS.md
@@ -239,7 +259,7 @@ Next steps:
         context: tag recollections [?] and our reasoning [I], per AGENTS.md.
 
 EOF
-if command -v code >/dev/null 2>&1 && [ "$HAVE_TTY" = 1 ]; then
+if [ "$HAVE_VSCODE" = 1 ] && [ "$HAVE_TTY" = 1 ]; then
   ans="$(prompt 'Open it in VS Code now? (Y/n)' 'Y')"
-  case "$ans" in [Yy]*) code "$TARGET" ;; esac
+  case "$ans" in [Yy]*) open_vscode ;; esac
 fi
