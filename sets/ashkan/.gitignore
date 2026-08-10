@@ -1,0 +1,70 @@
+# OS / editors
+.DS_Store
+Thumbs.db
+*~
+*.swp
+.idea/
+.vscode/
+.history/
+
+# Pixi environment (regenerable from pixi.lock; the lock file IS committed)
+.pixi/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.ruff_cache/
+.venv/
+
+# LaTeX build artifacts
+*.aux
+*.bbl
+*.bcf
+*-SAVE-ERROR
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.lof
+*.lot
+*.out
+*.toc
+*.synctex.gz
+*.run.xml
+*.nav
+*.snm
+*.vrb
+*.dvi
+*.xdv
+
+# Compiled lab book: regenerable with `pixi run labbook`, so not tracked.
+labbook.pdf
+
+# Source PDFs: large and often not redistributable. Registered instead in
+# literature/SOURCES.md (citekey, DOI/arXiv, URL, retrieval date, SHA256) so
+# they can be re-acquired. See PROVENANCE.md.
+literature/pdfs/*
+!literature/pdfs/.gitkeep
+
+# Upstream paper sources (LaTeX/code/data tarballs). Small text sources may be
+# force-added with `git add -f` when they back a claim; blobs stay out.
+literature/src/*
+!literature/src/.gitkeep
+
+# Bulk numerical output. Runs must stay reproducible from the recorded command
+# plus pixi.lock; commit only small text summaries and vector figures.
+*.npy
+*.npz
+*.h5
+*.hdf5
+*.mat
+*.pkl
+*.nc
+
+# Secrets
+.env
+*.secret

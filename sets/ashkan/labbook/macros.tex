@@ -1,0 +1,66 @@
+% Shared macros for the lab book. Included by labbook.tex before \begin{document}.
+
+% ---------------------------------------------------------------------------
+% Evidence tags. These are the LaTeX counterparts of the markdown tags
+% [S:...] [D:...] [C:...] [I] [?] defined in PROVENANCE.md. Every factual
+% sentence in a shard carries one. Untagged means unverified.
+% ---------------------------------------------------------------------------
+
+\definecolor{evsourced}{RGB}{0,102,0}
+\definecolor{evderived}{RGB}{0,0,153}
+\definecolor{evcomputed}{RGB}{0,102,153}
+\definecolor{evinferred}{RGB}{153,76,0}
+\definecolor{evopen}{RGB}{178,0,0}
+
+% \evS{citekey}{location} -- stated by a registered source at that location.
+% Also emits \cite so the source appears in the bibliography. Both arguments
+% may be empty, which renders a bare [S] for referring to the tag in prose.
+\newcommand{\evS}[2]{%
+  \textcolor{evsourced}{\footnotesize[S%
+    \ifx\relax#1\relax\else:\,\cite{#1}\fi
+    \ifx\relax#2\relax\else\,#2\fi]}}
+
+% \evD{derivation-id} -- our derivation, checked, under derivations/.
+\newcommand{\evD}[1]{\textcolor{evderived}{\footnotesize[D:\,\texttt{#1}]}}
+
+% \evC{run-id} -- our computation, recorded under runs/.
+\newcommand{\evC}[1]{\textcolor{evcomputed}{\footnotesize[C:\,\texttt{#1}]}}
+
+% \evI -- our inference or interpretation; plausible, not yet checked.
+\newcommand{\evI}{\textcolor{evinferred}{\footnotesize[I]}}
+
+% \evQ -- needs a source or a check.
+\newcommand{\evQ}{\textcolor{evopen}{\footnotesize[?]}}
+
+% ---------------------------------------------------------------------------
+% Status and gates
+% ---------------------------------------------------------------------------
+
+% \gates{S,D,M} -- which validation gates were actually run for a result.
+\newcommand{\gates}[1]{\textsf{\footnotesize gates:\,#1}}
+
+% \status{active} -- status of a section's content.
+\newcommand{\status}[1]{\textsf{\footnotesize status:\,#1}}
+
+% \TODO{...} -- visible placeholder; never leave one in a promoted result.
+\newcommand{\TODO}[1]{\textcolor{evopen}{\textbf{TODO:} #1}}
+
+% \pathid{runs/2026-07-29-...} -- typewriter text that may break at its own
+% punctuation. Run ids and DOIs are wider than the table columns that hold
+% them, and plain \texttt has no break points, so they crossed the margin.
+% Use this, not \texttt, for any path, run id or DOI inside a table cell.
+% \DeclareUrlCommand, not a \newcommand wrapping \Url: the argument has to be
+% read with url's own catcodes, which a normal macro argument has already lost.
+\usepackage{url}
+\DeclareUrlCommand\pathid{\urlstyle{tt}}
+
+% ---------------------------------------------------------------------------
+% Physics shorthand. Add sparingly, and only for notation fixed in
+% CONVENTIONS.md.
+% ---------------------------------------------------------------------------
+
+\newcommand{\ket}[1]{\lvert #1 \rangle}
+\newcommand{\bra}[1]{\langle #1 \rvert}
+\newcommand{\ev}[1]{\langle #1 \rangle}
+\newcommand{\braket}[2]{\langle #1 \vert #2 \rangle}
+\newcommand{\dd}{\mathrm{d}}

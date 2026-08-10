@@ -1,0 +1,58 @@
+[project]
+# name, description and authors are personalised at onboarding (ONBOARDING.md).
+name = "research-notebook"
+version = "0.1.0"
+description = "Research notebook for theoretical and computational physics"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = []
+
+# --------------------------------------------------------------------------- #
+# Tooling
+# --------------------------------------------------------------------------- #
+[tool.pytest.ini_options]
+minversion = "8.0"
+# tests/ checks the notebook's own structure; simulation validation tests live
+# next to the simulations they validate.
+testpaths = ["tests", "sims"]
+addopts = "-ra"
+
+[tool.ruff]
+line-length = 99
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+# --------------------------------------------------------------------------- #
+# Pixi
+# --------------------------------------------------------------------------- #
+[tool.pixi.workspace]
+channels = ["conda-forge"]
+platforms = ["osx-arm64", "linux-64"]
+
+[tool.pixi.dependencies]
+python = ">=3.11"
+numpy = "*"
+scipy = "*"
+matplotlib = "*"
+
+[tool.pixi.feature.dev.dependencies]
+pytest = ">=8"
+ruff = ">=0.6"
+
+[tool.pixi.environments]
+default = { features = ["dev"], solve-group = "default" }
+
+[tool.pixi.tasks]
+# The local gate: sources, citekeys, runs, links, lab-book shards.
+# Pass --write to also regenerate the INDEX.md tables.
+check = "python scripts/check.py"
+
+test = "pytest"
+lint = "ruff check ."
+format = "ruff format ."
+
+# The lab book builds with the SYSTEM TeX installation (MacTeX on macOS); TeX
+# Live is deliberately not pulled into the pixi environment. See ONBOARDING.md.
+labbook = { cmd = "latexmk -pdf -interaction=nonstopmode labbook.tex" }
+labbook-clean = { cmd = "latexmk -C labbook.tex" }

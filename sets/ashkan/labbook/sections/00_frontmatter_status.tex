@@ -1,0 +1,56 @@
+% SHARD-ID: NB-00-FRONTMATTER
+% SHARD-TITLE: Scope, Status, and Evidence Rules
+% SHARD-SUMMARY: Declares what this lab book is, what counts as an established result, and how evidence tags and gates are used in the text.
+% SHARD-KEYWORDS: scope, status, evidence, gates, claim policy
+
+\section{Scope, Status, and Evidence Rules}
+\label{sec:frontmatter-status}
+
+\subsection*{What this document is}
+
+This is the durable record of this research notebook. Working material --- brainstorms, reading
+notes, quick derivations, individual simulation runs --- lives in the Markdown layer of the
+repository (\texttt{ideas/}, \texttt{derivations/}, \texttt{runs/}, \texttt{literature/notes/}). A
+result is written here only after it has been checked, and every entry names the checks that were
+run.
+
+Nothing in this document is established by having been written here. It is established by the
+source, derivation, or run that the sentence points at.
+
+\subsection*{Evidence tags}
+
+Every factual sentence carries one of:
+
+\begin{itemize}
+  \item \evS{}{} --- stated by a source registered in \texttt{literature/SOURCES.md}, at the cited
+        location;
+  \item \evD{id} --- our derivation, checked, under \texttt{derivations/};
+  \item \evC{run-id} --- our computation, recorded under \texttt{runs/};
+  \item \evI{} --- our inference or interpretation: plausible, not yet checked;
+  \item \evQ{} --- needs a source or a check.
+\end{itemize}
+
+An untagged factual sentence is a defect. The distinction that matters most is between \evS{}{} and
+\evI{}: what a paper says, versus what we concluded from it.
+
+\subsection*{Validation gates}
+
+Results record which of the six gates actually ran, as \gates{S,D,M,C}:
+
+\begin{description}
+  \item[S --- Source] the source is local, hashed, and registered.
+  \item[D --- Definition] terms are in \texttt{GLOSSARY.md}, conventions in \texttt{CONVENTIONS.md}.
+  \item[M --- Math] a derivation or cited theorem supports the statement.
+  \item[C --- Computation] a run checks an invariant, a known limit, or a published number ---
+        independent of the statement it checks; a circular comparison is not a check.
+  \item[R --- Review] independently reviewed.
+  \item[B --- Build] \texttt{pixi run check}, \texttt{pixi run test}, \texttt{pixi run labbook} pass.
+\end{description}
+
+Naming a gate that was not run is the one unrecoverable error in this repository.
+
+\subsection*{Current status}
+
+\status{seed} \evI{} No sources are registered, no derivations are checked, and no runs are
+recorded. This paragraph is a scaffold statement and should stop being true, and be rewritten, the
+first time something real is established.

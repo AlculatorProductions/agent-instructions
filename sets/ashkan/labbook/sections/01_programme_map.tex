@@ -1,0 +1,43 @@
+% SHARD-ID: NB-01-PROGRAMME-MAP
+% SHARD-TITLE: Programme Map
+% SHARD-SUMMARY: Lists the research axes the notebook covers and the order in which their foundations must be laid.
+% SHARD-SUMMARY: Asserts no connections between axes that have not been established.
+% SHARD-KEYWORDS: programme, research axes, scope, roadmap
+
+\section{Programme Map}
+\label{sec:programme-map}
+
+\subsection*{Purpose of this shard}
+
+This shard says what the notebook is \emph{about}, so that a reader --- human or agent --- can tell
+within a minute whether a new idea belongs here and what it would have to connect to. It is a map
+of intentions, not of results. Anything claimed as a result belongs in a later shard with its gates
+named.
+
+\subsection*{Axes}
+
+\status{open} No axis has been opened yet. Each axis entry, once added, states the question, the
+sources that ground it, and the first thing that must be settled before work on it can proceed.
+
+\subsection*{Rules for this map}
+
+\begin{enumerate}
+  \item An axis is added when there is a concrete question, not when there is an interest.
+  \item Connections between axes are stated only when a derivation or a run supports them. A
+        suspected connection is written as \evI{} or \evQ{} and lives in \texttt{ideas/} until it
+        is earned.
+  \item Each axis names the conventions it depends on. Conflicting conventions between axes are
+        resolved in \texttt{CONVENTIONS.md} before shared code is written.
+  \item An axis that is dropped is not deleted: it is marked dropped, with the reason, and the
+        attempt is recorded in \texttt{attic/}.
+\end{enumerate}
+
+\subsection*{What must exist before technical shards}
+
+\begin{itemize}
+  \item Registered primary sources for the axis, with local PDFs and hashes.
+  \item Unit, sign and normalisation conventions for the quantities involved.
+  \item Glossary entries for the terms the axis introduces.
+  \item At least one validation target: a known analytic limit, a published number, or a figure to
+        reproduce, against which our first computation can be checked.
+\end{itemize}

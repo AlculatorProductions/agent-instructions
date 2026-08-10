@@ -1,0 +1,21 @@
+# Default parameters for sims/<slug>. All values SI unless the comment says
+# otherwise. Copy into a run directory and edit there — a run is described by
+# code SHA + this file + pixi.lock.
+
+[meta]
+description = "what this parameter set represents"
+
+[system]
+# mass = 0.0              # kg — cite the source in the sim README
+
+[grid]
+# n = [128, 128, 128]     # points per axis
+# extent = [1e-4, 1e-4, 1e-4]  # m, full box length per axis
+
+[evolution]
+# dt = 1e-6               # s
+# t_final = 1e-3          # s
+
+[numerics]
+seed = 0                  # every stochastic element seeds from this
+# tolerance = 1e-10

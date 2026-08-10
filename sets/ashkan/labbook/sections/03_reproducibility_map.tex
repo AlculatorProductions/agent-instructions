@@ -1,0 +1,44 @@
+% SHARD-ID: NB-03-REPRO-MAP
+% SHARD-TITLE: Reproducibility Map
+% SHARD-SUMMARY: Maps each simulation to the runs it produced and each run to the claims and figures that depend on it.
+% SHARD-SUMMARY: States the rules that make a number in this lab book regenerable from a recorded command.
+% SHARD-KEYWORDS: reproducibility, runs, simulations, figures, artefacts, provenance
+
+\section{Reproducibility Map}
+\label{sec:reproducibility-map}
+
+\subsection*{Simulations and their runs}
+
+No simulation has produced a run yet. Once one has, this table maps each simulation to the runs it
+produced and each run to the claims that depend on it, per \texttt{labbook/README.md} rule~6.
+
+\subsection*{The contract}
+
+Every number and figure in this lab book must be regenerable. Concretely, a \evC{run-id} tag points
+at \texttt{runs/<run-id>/README.md}, and that file records:
+
+\begin{itemize}
+  \item the hypothesis the run was meant to test;
+  \item the simulation and the git commit SHA it was run at;
+  \item the exact command, and the parameters as a committed \texttt{params.toml};
+  \item the environment, identified by the \texttt{pixi.lock} hash;
+  \item the headline result, its interpretation, and its uncertainty --- convergence level,
+        tolerances, statistical error, and the physics the model omits;
+  \item the gates that were run.
+\end{itemize}
+
+Large outputs are not committed. Each is represented in its run README by a stub giving path, size,
+SHA256 and the command that produces it, so its absence is auditable and its regeneration is
+mechanical. Small text summaries and the vector figures that appear here are committed.
+
+\subsection*{Run to shard map}
+
+No run has been promoted into a shard yet.
+
+\subsection*{Validation targets}
+
+Every simulation must be checked against something outside itself before its output is used in an
+argument: an analytic limit, a published number, a reproduced figure, or a convergence study.
+``It ran without errors'' is not a check. Validation targets accepted for each simulation are
+listed in that simulation's own README and repeated here once a run has confirmed them. None has
+run yet.

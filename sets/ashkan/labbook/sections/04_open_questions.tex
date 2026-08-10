@@ -1,0 +1,36 @@
+% SHARD-ID: NB-04-OPEN-QUESTIONS
+% SHARD-TITLE: Source Queue and Open Questions
+% SHARD-SUMMARY: Collects what is not yet known: sources to acquire, claims marked unverified, and questions the notebook is trying to answer.
+% SHARD-KEYWORDS: open questions, source queue, unverified, backlog, next steps
+
+\section{Source Queue and Open Questions}
+\label{sec:open-questions}
+
+This shard is the honest inventory of what is missing. It is expected to be long. A short version
+of this section means the notebook has stopped asking questions, not that it has answered them.
+
+\subsection*{Source queue}
+
+\status{open} Sources identified as needed but not yet acquired and registered. Each row: what is
+needed, what it would settle, and where it is expected to be found. A source stays here until it
+has a local PDF, a hash, and an entry in \texttt{literature/SOURCES.md}. None queued yet.
+
+\subsection*{Unverified claims}
+
+Claims carrying \evQ{} anywhere in the repository are the verification backlog. They are found
+with
+
+\begin{verbatim}
+grep -rn '\[?\]' --include='*.md' --include='*.tex' .
+\end{verbatim}
+
+\noindent and their \LaTeX{} counterparts with \verb|grep -rn 'evQ' labbook/|. Claims carrying
+\evI{} are our own unchecked reasoning and are the second queue; promoting one to \evS{}{} requires
+opening the source and reading the passage, never inference from an abstract or a summary.
+
+\subsection*{Open questions}
+
+\status{open} The questions the notebook exists to answer, in the form: the question, why it
+matters, and what an answer would have to look like. Questions are moved out of this list only when
+they are answered (with the shard that answers them) or explicitly abandoned (with the
+\texttt{attic/} entry that records why). None recorded yet.

@@ -1,0 +1,87 @@
+% MASTER FILE for the lab book.
+%
+% This file holds the preamble and the include order ONLY. No prose here — all
+% body text lives in labbook/sections/*.tex shards. See labbook/README.md.
+%
+% Build: pixi run labbook   (latexmk -pdf labbook.tex, system TeX + biber)
+
+\documentclass[11pt]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{array}          % >{\raggedright\arraybackslash}p{} in the wide tables
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{graphicx}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepgfplotslibrary{fillbetween}
+\usetikzlibrary{arrows.meta}
+% Figure data lives as plain-text .dat files under runs/; pgfplots reads them
+% directly, so the committed artefact is the data and the figure is rebuilt at
+% compile time. See labbook/README.md.
+\pgfplotsset{
+  looksmall/.style={
+    width=0.50\linewidth, height=5.0cm,
+    tick label style={font=\scriptsize}, label style={font=\small},
+    title style={font=\small, align=left}, legend style={font=\scriptsize, draw=none},
+    grid=both, grid style={line width=.2pt, draw=gray!25},
+    axis line style={draw=gray!45}, tick style={draw=gray!45},
+  }
+}
+\definecolor{sOne}{HTML}{2A78D6}
+\definecolor{sTwo}{HTML}{EB6834}
+\definecolor{sThree}{HTML}{1BAF7A}
+\definecolor{sFour}{HTML}{EDA100}
+
+\usepackage{xcolor}
+\usepackage{geometry}
+\usepackage[hidelinks]{hyperref}
+\usepackage[backend=biber,style=numeric,sorting=none]{biblatex}
+
+\geometry{margin=1in}
+\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
+
+% Typography: the overfull boxes in this document are almost all long \texttt
+% run ids and file paths, which TeX will not break by default. [htt] lets it
+% hyphenate typewriter text; the emergency stretch absorbs the rest rather than
+% letting a line cross the margin. Together with \pathid (labbook/macros.tex)
+% this took the count from 49 to 8, worst case 165pt to 59pt.
+%
+% [htt] costs ~31 "Font shape T1/cmtt/... undefined" substitution warnings in
+% the log. Kept anyway: without it the count is 17. Log noise is cheaper than
+% text crossing the margin.
+\usepackage[htt]{hyphenat}
+\emergencystretch=3em
+\hyphenpenalty=250
+\tolerance=1500
+% Run ids like 2026-07-29-lattice-band-validation are wider than the columns
+% that hold them; breaking after their existing hyphens must be cheap.
+\exhyphenpenalty=50
+
+% Single bibliography, shared with the notes layer: a citekey here and a
+% citekey in a note's frontmatter are the same identifier.
+\addbibresource{literature/references.bib}
+
+\input{labbook/macros}
+
+% Title and author are personalised at onboarding (ONBOARDING.md): the title
+% carries the project name, the author comes from `git config user.name`.
+\title{Research Notebook --- Lab Book}
+\author{}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\include{labbook/sections/00_frontmatter_status}
+\include{labbook/sections/01_programme_map}
+\include{labbook/sections/02_lab_log}
+\include{labbook/sections/03_reproducibility_map}
+\include{labbook/sections/04_open_questions}
+
+\printbibliography
+
+\end{document}
