@@ -164,7 +164,8 @@ attic/                 failed attempts worth keeping, and why they failed
 log/                   session worklogs and handoffs
 scripts/check.py       the local consistency gate (`pixi run check`)
 INDEX.md               generated index of everything above
-TIMELINE.md            the commit line and fork graph (see "Fork the timeline")
+TIMELINE.md            generated commit line + fork history — the map for going back
+FORKING.md             the protocol for finding the right commit and branching off
 ONBOARDING.md          one-time setup steps for a fresh copy; deleted once done
 ```
 
@@ -198,33 +199,26 @@ Cross-link with relative Markdown links (`../runs/2026-07-29-foo/README.md`), ne
   ran, then push. An uncommitted milestone is a run whose recorded git SHA does not contain the
   run; an unpushed one exists on one machine only. Journal submission and arXiv posting are a
   different matter and stay the owner's.
-- **Record each milestone commit in `TIMELINE.md`** — ID, short SHA, branch, one phrase — in the
-  same commit. That is what makes the fork graph usable.
+- **Milestone commit messages carry a `gates:` line** naming the gates that ran — the generated
+  commit line in `TIMELINE.md` marks those commits ✓ as known-good anchors. The timeline table is
+  never hand-maintained: a commit cannot contain its own SHA, so it is regenerated from git
+  history by `pixi run check --write`.
 - **Never `git add -f` a PDF.** `literature/pdfs/` and `literature/src/` are gitignored on
   purpose.
 
 ## Fork the timeline (branch off)
 
-[TIMELINE.md](TIMELINE.md) holds the commit line and the fork graph. Its purpose: when a line of
-work goes bad — the context was poisoned by hallucinations, a convention turned out wrong upstream
-— or the user wants to switch topic, work continues on a fresh branch from a known-good commit,
-and the map of what was abandoned stays visible.
+[TIMELINE.md](TIMELINE.md) holds the generated commit line and the hand-written fork history —
+the map for going back when a line of work goes bad or the topic changes.
 
-When the user asks to branch off:
+**Trigger:** whenever the user asks to go back or branch off, or expresses doubt that the
+notebook still reflects their research — even vaguely ("this stopped feeling like my project") —
+stop the current task and follow [FORKING.md](FORKING.md). It names the failure mode, locates the
+base commit by showing the user notebook snapshots (`git show <sha>:INDEX.md`), salvages what is
+worth keeping, creates `fork/<YYYY-MM-DD>-<slug>`, and records the fork — with the reason in the
+user's own words — in `TIMELINE.md`.
 
-1. Show them the commit line from `TIMELINE.md` and agree on the base commit (`C<n>` or SHA) and a
-   short slug for the new direction.
-2. `git switch -c fork/<YYYY-MM-DD>-<slug> <sha>`.
-3. Append the updated graph to `TIMELINE.md`, marking the abandoned tip `✗` with a one-line
-   reason, and commit that as the first commit of the fork.
-4. Continue working there. Milestone commits keep landing in the commit line as usual.
-
-```
-C1 ── C2 ── C3 ✗                    main — abandoned at C3 (poisoned context)
-        └── C4 ── C5                fork/2026-08-11-fresh-start   ← current
-```
-
-Never rewrite `TIMELINE.md` history — like the session logs, it is append-only. An abandoned line is a
+The fork blocks in `TIMELINE.md` are append-only, like the session logs. An abandoned line is a
 result about the work; deleting it invites re-walking it.
 
 ## Workflows
@@ -400,7 +394,7 @@ ways. Deleting a dead end silently means the next agent will rebuild it.
    what you deliberately left, and what the next session should pick up first.
 3. Run `pixi run check`, and `pixi run labbook` if the lab book changed — the session is not
    finished until the PDF compiles. Fix what they report.
-4. `pixi run check --write` to refresh `INDEX.md`.
+4. `pixi run check --write` to refresh `INDEX.md` and the `TIMELINE.md` commit line.
 5. `git status`. Commit when the work is coherent, and push if `origin` is registered — see
    **Git policy**, which makes committing and pushing at milestones the default rather than
    something to ask about.

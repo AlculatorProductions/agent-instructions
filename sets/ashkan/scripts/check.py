@@ -3,7 +3,8 @@
 Checks that the record hangs together: sources are registered and hashed, cited
 citekeys exist, runs are documented, links resolve, and the lab book's shard
 structure is intact. With ``--write`` it also regenerates the tables in
-INDEX.md from frontmatter and shard headers.
+INDEX.md from frontmatter and shard headers, and refreshes the commit-line
+table in TIMELINE.md from git history.
 
     pixi run check            # verify
     pixi run check --write    # verify and refresh INDEX.md
@@ -521,6 +522,93 @@ def write_index(blocks: dict[str, list[str]]) -> bool:
 
 
 # --------------------------------------------------------------------------- #
+# TIMELINE.md generation
+# --------------------------------------------------------------------------- #
+
+
+def git_output(args_: list[str]) -> str | None:
+    """Run git against ROOT; None when git or the repository is unavailable."""
+    try:
+        out = subprocess.run(
+            ["git", *args_], cwd=ROOT, capture_output=True, text=True, check=True
+        )
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        return None
+    return out.stdout
+
+
+def timeline_rows() -> list[str] | None:
+    """The commit-line table, rendered from git history after the fact.
+
+    A commit cannot contain its own SHA, so this table is generated, never
+    hand-written: it only ever describes commits that already exist, and the
+    refresh that commits it shows up at the next refresh. For the same reason
+    there is no staleness check, unlike INDEX.md. Returns None when ROOT is
+    not itself a repository root (the set living inside another repository,
+    e.g. as a template) -- rendering the parent's history would be wrong.
+    """
+    toplevel = git_output(["rev-parse", "--show-toplevel"])
+    if toplevel is None or Path(toplevel.strip()).resolve() != ROOT:
+        return None
+    log = git_output([
+        "log", "--all", "--reverse", "--topo-order", "--date=short",
+        "--format=%h%x1f%ad%x1f%s%x1f%b%x1e",
+    ])
+    if log is None or not log.strip():
+        return ["_no commits yet_"]
+    head = (git_output(["rev-parse", "--short", "HEAD"]) or "").strip()
+
+    # Attribute each commit to the branch where it first appeared: main claims
+    # its whole line first, then forks (date-named, so sorted = chronological)
+    # claim what remains. Git's %S is not used -- it reports whichever ref the
+    # traversal happened to reach a shared ancestor from, which mislabels the
+    # trunk after a fork.
+    names = git_output(["for-each-ref", "refs/heads", "--format=%(refname:short)"]) or ""
+    branches = [b for b in names.splitlines() if b]
+    branches.sort(key=lambda b: (b not in ("main", "master"), b))
+    owner: dict[str, str] = {}
+    for branch in branches:
+        for sha in (git_output(["log", branch, "--format=%h"]) or "").splitlines():
+            owner.setdefault(sha, branch)
+
+    rows = [
+        "| # | Commit | When | Branch | ✓ | What happened |",
+        "|---|---|---|---|---|---|",
+    ]
+    for i, record in enumerate([r for r in log.split("\x1e") if r.strip()], start=1):
+        sha, date, subject, body = (record.strip("\n").split("\x1f") + [""] * 4)[:4]
+        branch = owner.get(sha, "")
+        gated = "✓" if "gates:" in f"{subject} {body}".lower() else ""
+        here = " ← current" if sha == head else ""
+        phrase = subject.replace("|", "\\|")
+        rows.append(f"| C{i} | `{sha}` | {date} | {branch}{here} | {gated} | {phrase} |")
+    return rows
+
+
+def write_timeline() -> bool | None:
+    """Replace the generated block in TIMELINE.md. None when skipped."""
+    timeline = ROOT / "TIMELINE.md"
+    if not timeline.exists():
+        return None
+    rows = timeline_rows()
+    if rows is None:
+        return None
+    text = timeline.read_text(encoding="utf-8")
+    pattern = re.compile(
+        r"(<!-- BEGIN:GENERATED timeline -->\n).*?(<!-- END:GENERATED timeline -->)",
+        re.DOTALL,
+    )
+    if not pattern.search(text):
+        return None
+    body = "\n".join(rows) + "\n"
+    updated = pattern.sub(lambda m, body=body: m.group(1) + body + m.group(2), text)
+    if updated != text:
+        timeline.write_text(updated, encoding="utf-8")
+        return True
+    return False
+
+
+# --------------------------------------------------------------------------- #
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -543,6 +631,13 @@ def main(argv: list[str] | None = None) -> int:
     if args.write:
         changed = write_index(index_blocks(shards, runs, sources))
         print("INDEX.md updated" if changed else "INDEX.md already current")
+        refreshed = write_timeline()
+        if refreshed is not None:
+            print(
+                "TIMELINE.md commit line updated"
+                if refreshed
+                else "TIMELINE.md commit line already current"
+            )
 
     for warning in rep.warnings:
         print(f"warning: {warning}")

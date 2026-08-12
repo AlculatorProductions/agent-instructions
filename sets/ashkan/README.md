@@ -26,7 +26,8 @@ gets confused with our own inference.
 | [PROVENANCE.md](PROVENANCE.md) | Claim policy: what counts as evidence |
 | [CONVENTIONS.md](CONVENTIONS.md) | Units, signs, normalisations — fixed before code depends on them |
 | [GLOSSARY.md](GLOSSARY.md) | Terms, with sources |
-| [TIMELINE.md](TIMELINE.md) | Commit line and fork graph — the map for branching off |
+| [TIMELINE.md](TIMELINE.md) | Generated commit line + fork history — the map for going back |
+| [FORKING.md](FORKING.md) | The protocol for finding the right commit and branching off |
 | [labbook.tex](labbook.tex), [labbook/](labbook/) | The lab book: sharded LaTeX — the durable record |
 | [literature/](literature/) | `references.bib`, `SOURCES.md`, PDFs (untracked), extracted text, reading notes |
 | [ideas/](ideas/) | Brainstorms, hypotheses, open questions |
@@ -75,9 +76,10 @@ register it in `labbook/SHARD_CATALOG.md` and the order table, and record it in 
 **Record a dead end.** Write it into [attic/](attic/) with what it rules out. Failed attempts are
 results.
 
-**Branch off.** When a line of work goes bad (poisoned context, a wrong turn) or the topic changes,
-work continues on a fresh branch from a known-good commit. [TIMELINE.md](TIMELINE.md) holds the
-commit line and fork graph; the workflow is in [AGENTS.md](AGENTS.md).
+**Branch off.** When the notebook stops feeling right — poisoned context, a wrong turn, a topic
+change, or just "these notes aren't mine anymore" — tell the agent. It follows
+[FORKING.md](FORKING.md): finds the right commit with you by showing notebook snapshots, then
+forks from it. [TIMELINE.md](TIMELINE.md) holds the map.
 
 ## Conventions in brief
 

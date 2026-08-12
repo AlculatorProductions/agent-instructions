@@ -45,7 +45,7 @@ default = { features = ["dev"], solve-group = "default" }
 
 [tool.pixi.tasks]
 # The local gate: sources, citekeys, runs, links, lab-book shards.
-# Pass --write to also regenerate the INDEX.md tables.
+# Pass --write to also regenerate INDEX.md and the TIMELINE.md commit line.
 check = "python scripts/check.py"
 
 test = "pytest"
