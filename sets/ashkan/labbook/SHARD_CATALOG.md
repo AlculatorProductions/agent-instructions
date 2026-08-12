@@ -22,25 +22,17 @@ two agree and that every shard is included exactly once.
 - Summary: Asserts no connections between axes that have not been established.
 - Keywords: programme, research axes, scope, roadmap
 
-## `NB-02-LAB-LOG`
+## `NB-02-REPRO-MAP`
 
-- Source: `sections/02_lab_log.tex`
-- Title: Lab Log
-- Summary: Append-only chronological record of what was established, when, on what evidence, and with which gates.
-- Summary: The primary entry point for reconstructing how a result came about.
-- Keywords: lab log, chronology, session record, handoff, provenance
-
-## `NB-03-REPRO-MAP`
-
-- Source: `sections/03_reproducibility_map.tex`
+- Source: `sections/02_reproducibility_map.tex`
 - Title: Reproducibility Map
 - Summary: Maps each simulation to the runs it produced and each run to the claims and figures that depend on it.
 - Summary: States the rules that make a number in this lab book regenerable from a recorded command.
 - Keywords: reproducibility, runs, simulations, figures, artefacts, provenance
 
-## `NB-04-OPEN-QUESTIONS`
+## `NB-03-OPEN-QUESTIONS`
 
-- Source: `sections/04_open_questions.tex`
+- Source: `sections/03_open_questions.tex`
 - Title: Source Queue and Open Questions
 - Summary: Collects what is not yet known: sources to acquire, claims marked unverified, and questions the notebook is trying to answer.
 - Keywords: open questions, source queue, unverified, backlog, next steps

@@ -18,7 +18,7 @@ graph below with the abandoned tip marked `✗` and a one-line reason, commits, 
 ## Commit line
 
 One row per milestone commit, newest last. The phrase says what the commit established, in the
-same terms as its lab-log or `log/` entry.
+same terms as its `log/` entry.
 
 | ID | SHA | Branch | What happened |
 |---|---|---|---|

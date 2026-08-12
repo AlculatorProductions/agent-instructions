@@ -20,7 +20,7 @@ its local file when present, and that every citekey used in note frontmatter res
 | SHA256 | `shasum -a 256 <file>`; `—` while missing-local |
 
 A source that is wanted but not yet acquired is tracked in the source queue in the lab book
-(`NB-04-OPEN-QUESTIONS`), not here. This file lists what we actually have.
+(`NB-03-OPEN-QUESTIONS`), not here. This file lists what we actually have.
 
 ## Registered sources
 

@@ -20,12 +20,11 @@ Build with `pixi run labbook` (system LaTeX: `latexmk` + `biber`). Check structu
 |---:|---|---|---|
 | 0 | `NB-00-FRONTMATTER` | `sections/00_frontmatter_status.tex` | Scope, Status, and Evidence Rules |
 | 1 | `NB-01-PROGRAMME-MAP` | `sections/01_programme_map.tex` | Programme Map |
-| 2 | `NB-02-LAB-LOG` | `sections/02_lab_log.tex` | Lab Log |
-| 3 | `NB-03-REPRO-MAP` | `sections/03_reproducibility_map.tex` | Reproducibility Map |
-| 4 | `NB-04-OPEN-QUESTIONS` | `sections/04_open_questions.tex` | Source Queue and Open Questions |
+| 2 | `NB-02-REPRO-MAP` | `sections/02_reproducibility_map.tex` | Reproducibility Map |
+| 3 | `NB-03-OPEN-QUESTIONS` | `sections/03_open_questions.tex` | Source Queue and Open Questions |
 
-Shards 00–04 are structural and stay at the front. New material is added as `NN_<slug>.tex` with
-`NN` continuing from 05.
+Shards 00–03 are structural and stay at the front. New material is added as `NN_<slug>.tex` with
+`NN` continuing from 04.
 
 ## Rules
 
@@ -60,17 +59,14 @@ Shards 00–04 are structural and stay at the front. New material is added as `N
    `../literature/references.bib`, the same file the note frontmatter draws citekeys from. Do not
    create a second `.bib`.
 
-8. **`sections/02_lab_log.tex` is append-only.** Add dated entries at the end; never edit or delete
-   an old one. A later entry supersedes an earlier one and says so.
-
-9. **`labbook.pdf` is not committed** — it is regenerable with `pixi run labbook`.
+8. **`labbook.pdf` is not committed** — it is regenerable with `pixi run labbook`.
 
 ## Adding a shard
 
 ```bash
-cp sections/01_programme_map.tex sections/05_my_topic.tex   # then replace the header and body
+cp sections/01_programme_map.tex sections/04_my_topic.tex   # then replace the header and body
 ```
 
-Then: add `\include{labbook/sections/05_my_topic}` to `labbook.tex` in the right position, add a
-row to the table above and a block to `SHARD_CATALOG.md`, append a lab-log entry saying what the
-shard establishes and with which gates, and run `pixi run check && pixi run labbook`.
+Then: add `\include{labbook/sections/04_my_topic}` to `labbook.tex` in the right position, add a
+row to the table above and a block to `SHARD_CATALOG.md`, record in the session's `log/` entry
+what the shard establishes and with which gates, and run `pixi run check && pixi run labbook`.

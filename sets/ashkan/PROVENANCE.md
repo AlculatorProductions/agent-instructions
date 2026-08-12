@@ -66,8 +66,8 @@ regeneration is mechanical.
 
 Claims are corrected in place and the correction is recorded; they are not silently deleted. A
 refuted idea gets `status: refuted`, a note saying what refuted it, and — if the attempt taught
-something — an entry in [attic/](attic/). Lab-log entries are never rewritten; a later entry
-supersedes an earlier one and says which.
+something — an entry in [attic/](attic/). Session-log entries (`log/`) are not rewritten once
+their session is over; a later entry supersedes an earlier one and says which.
 
 ## Subagent and tool reports
 

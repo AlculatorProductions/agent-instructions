@@ -39,7 +39,7 @@ One of the six checks a claim can pass — **S**ource, **D**efinition, **M**ath,
 ### Promotion
 
 Moving a result from working memory (`ideas/`, `derivations/`, `runs/`) into the lab book
-(`labbook/sections/`) once its gates pass, together with a dated lab-log entry.
+(`labbook/sections/`) once its gates pass, recorded in the session's `log/` entry.
 
 ### Run
 

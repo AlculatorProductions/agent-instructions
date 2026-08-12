@@ -25,7 +25,7 @@ def test_labbook_shards_are_registered():
     shards = check.parse_shards(report)
     assert not report.errors, report.errors
     assert shards, "the lab book has no shards"
-    assert shards[2]["id"] == "NB-02-LAB-LOG", "the lab log must stay at position 2"
+    assert shards[0]["id"] == "NB-00-FRONTMATTER", "the frontmatter shard must stay first"
 
 
 def test_index_is_current():

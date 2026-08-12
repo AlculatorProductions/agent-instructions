@@ -91,12 +91,13 @@ This is the structure of the whole repo. Keep the two layers distinct.
 idea  →  derivation and/or simulation run  →  gates S,D,M,C pass
       →  new or extended shard in labbook/sections/
       →  registered in labbook/SHARD_CATALOG.md + labbook/README.md order table
-      →  dated entry appended to labbook/sections/02_lab_log.tex
+      →  recorded in the session's log/ entry (what, on which runs/sources, which gates)
       →  back-link written into the source idea/run (`shard:` frontmatter field)
 ```
 
-The Lab Log (`02_lab_log.tex`) is **append-only**. Entries are never rewritten or deleted; a later
-entry supersedes an earlier one and says so. That is what makes it a lab book rather than a draft.
+The chronology lives in `log/` — one dated Markdown entry per session, whose **Established**
+section records what was established, when, and on what evidence. Once a session is over its entry
+is not rewritten; a later entry supersedes it and says so.
 
 Do not promote a result because it looks right. Promote it because the gates ran.
 
@@ -130,7 +131,7 @@ grep -rn '\[I\]' --include='*.md' --include='*.tex' .   # our unchecked reasonin
 
 ## Validation gates
 
-Name the gates you actually ran — in the run README, in the `log/` entry, and in the Lab Log entry.
+Name the gates you actually ran — in the run README and in the `log/` entry.
 Claiming a gate you did not run is the one unrecoverable error in this repo.
 
 | Gate | Meaning |
@@ -223,7 +224,7 @@ C1 ── C2 ── C3 ✗                    main — abandoned at C3 (poisoned
         └── C4 ── C5                fork/2026-08-11-fresh-start   ← current
 ```
 
-Never rewrite `TIMELINE.md` history — like the lab log, it is append-only. An abandoned line is a
+Never rewrite `TIMELINE.md` history — like the session logs, it is append-only. An abandoned line is a
 result about the work; deleting it invites re-walking it.
 
 ## Workflows
@@ -339,16 +340,17 @@ Only when gates S, D, M and C have actually run:
 1. Extend an existing shard, or add `labbook/sections/NN_<slug>.tex` with the four-line
    `% SHARD-*` header, and `\include` it in `labbook.tex`.
 2. Register it in `labbook/SHARD_CATALOG.md` and the order table in `labbook/README.md`.
-3. Append a dated entry to `labbook/sections/02_lab_log.tex` naming what was established, the run
-   IDs and citekeys behind it, and the gates run.
+3. Record the promotion in today's `log/` entry: what was established, the run IDs and citekeys
+   behind it, and the gates run.
 4. Set `shard:` in the originating idea's frontmatter and set its `status: promoted`.
 5. `pixi run check && pixi run labbook`.
 
 ### Record a finding
 
-**Whenever something new is established, record it in the lab book in the same session.** Not at
-the end of the week. A finding that lives only in a run README or a chat transcript is not part of
-the record — and a chat transcript is discarded when the context compacts.
+**Whenever something new is established, record it in the same session.** Not at the end of the
+week. A finding that lives only in a chat transcript is not part of the record — a chat transcript
+is discarded when the context compacts. Every finding lands in the session's `log/` entry with its
+gates; substantive ones get a lab-book shard.
 
 **"Finding" is broader than "positive result."** All of these count and must be written down:
 
@@ -369,15 +371,10 @@ own artefacts. For a run whose result is promoted, close the loop: commit the ru
 that commit, and commit the refreshed provenance. `pixi run check` counts the runs where this gap is
 open.
 
-**Lab-log shards are split by week, not by date.** Open a new one when the current shard nears the
-280-line cap, not whenever the date changes. Name the shard for the week it opens and move nothing
-that does not have to move.
-
-1. Append a dated entry to the **newest lab-log shard** — `labbook/sections/02_lab_log.tex` or its
-   continuation, whichever is current per `labbook/README.md` — naming what was found, the run and
-   sources behind it, and the gates that actually ran.
-2. If the finding is substantive rather than incremental, give it a shard: `NN_<slug>.tex`,
-   registered in the three places listed in `labbook/README.md`.
+1. Record it in today's `log/` entry under **Established** — what was found, the run and sources
+   behind it, and the gates that actually ran.
+2. If the finding is substantive rather than incremental, give it a lab-book shard:
+   `NN_<slug>.tex`, registered in the three places listed in `labbook/README.md`.
 3. **Write in the derivations and equations the finding rests on** — the lab book must be readable
    without the working-memory layer.
 4. **Add a figure when a figure carries the argument** — a stationary point, a limit being

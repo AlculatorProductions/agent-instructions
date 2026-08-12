@@ -27,7 +27,7 @@ gets confused with our own inference.
 | [CONVENTIONS.md](CONVENTIONS.md) | Units, signs, normalisations — fixed before code depends on them |
 | [GLOSSARY.md](GLOSSARY.md) | Terms, with sources |
 | [TIMELINE.md](TIMELINE.md) | Commit line and fork graph — the map for branching off |
-| [labbook.tex](labbook.tex), [labbook/](labbook/) | The lab book: sharded LaTeX, incl. a dated lab log |
+| [labbook.tex](labbook.tex), [labbook/](labbook/) | The lab book: sharded LaTeX — the durable record |
 | [literature/](literature/) | `references.bib`, `SOURCES.md`, PDFs (untracked), extracted text, reading notes |
 | [ideas/](ideas/) | Brainstorms, hypotheses, open questions |
 | [derivations/](derivations/) | Quick derivations, worked out and checked |
@@ -69,8 +69,8 @@ result, interpretation and uncertainty. Small summaries and vector figures are c
 arrays are not, but their producing command is.
 
 **Promote a result.** Once it has passed its checks: add or extend a shard in `labbook/sections/`,
-register it in `labbook/SHARD_CATALOG.md`, and append a dated entry to the lab log in
-`labbook/sections/02_lab_log.tex`. See the promotion path in [AGENTS.md](AGENTS.md).
+register it in `labbook/SHARD_CATALOG.md` and the order table, and record it in the session's
+`log/` entry. See the promotion path in [AGENTS.md](AGENTS.md).
 
 **Record a dead end.** Write it into [attic/](attic/) with what it rules out. Failed attempts are
 results.
