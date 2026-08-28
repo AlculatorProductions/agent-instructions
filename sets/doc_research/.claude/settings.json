@@ -5,7 +5,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash scripts/doc_research/friday.sh",
+            "command": "bash doc_research/scripts/friday.sh",
             "timeout": 10
           }
         ]
@@ -14,15 +14,11 @@
   },
   "permissions": {
     "allow": [
-      "Bash(python3 scripts/doc_research/check.py)",
-      "Bash(python3 scripts/doc_research/check.py --write)",
-      "Bash(python3 scripts/doc_research/build_entries.py)",
-      "Bash(python3 scripts/doc_research/weekly.py*)",
-      "Bash(pixi run check*)",
-      "Bash(pixi run entries)",
-      "Bash(pixi run week)",
-      "Bash(pixi run labbook)",
-      "Bash(pixi run worklog)",
+      "Bash(python3 doc_research/scripts/check.py)",
+      "Bash(python3 doc_research/scripts/check.py --write)",
+      "Bash(python3 doc_research/scripts/build_entries.py)",
+      "Bash(python3 doc_research/scripts/weekly.py*)",
+      "Bash(cd doc_research && pixi run*)",
       "Bash(git status*)",
       "Bash(git log*)",
       "Bash(git diff*)"

@@ -1,0 +1,22 @@
+% MASTER FILE for the work log — what happened, week by week.
+%
+% Deliberately a separate document from labbook.tex: the lab book is the
+% technical record, this is the narrative one. Nothing here is a reference.
+%
+% Build: cd doc_research && latexmk -pdf worklog.tex   (or: pixi run worklog)
+
+\documentclass[11pt]{article}
+\input{labbook/preamble}
+
+\title{Work Log}
+\author{}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+% Generated — rebuild with `python3 doc_research/scripts/build_entries.py`. Newest week last.
+\input{log/weeks}
+
+\end{document}

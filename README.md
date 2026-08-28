@@ -75,25 +75,32 @@ curl -fsSL https://raw.githubusercontent.com/AlculatorProductions/agent-instruct
 ```
 
 It refuses to run on a dirty worktree, never overwrites a file that already exists (collisions are
-listed at the end for an agent to reconcile), appends to `.gitignore` instead of replacing it, and
-lands everything in one commit that `git revert` undoes.
+listed at the end for an agent to reconcile), and lands everything in one commit that `git revert`
+undoes.
 
-It never fights whatever already owns pixi in the target repository:
+**Everything lives in one `doc_research/` folder**, so it barely shows up in the repository it is
+added to. The only things at the root are a short `CLAUDE.md` pointer and the hidden `.claude/`
+directory, because Claude Code reads both from the root and nowhere else:
 
-| what it finds | what it does |
-|---|---|
-| no `[tool.pixi]` | ships its own standalone `pixi.toml`; `pyproject.toml` untouched |
-| `[tool.pixi]`, no tasks | appends a `[tool.pixi.tasks]` table to `pyproject.toml` — tasks only, no dependencies or platforms — and ships no `pixi.toml` |
-| `[tool.pixi.tasks]` already present | leaves pixi alone entirely; commands run as `python3 scripts/doc_research/check.py` |
+```
+<repo>/
+  CLAUDE.md            <- ~20 lines, points at the folder below
+  .claude/             <- settings.json (Friday hook) + slash commands
+  doc_research/        <- everything else: labbook, worklog, figures,
+                          calculations, scripts, pixi.toml, its own .gitignore
+  ...their own files, untouched
+```
 
-The choice is recorded as `pixi=` in `.instructions-source` so later updates honour it and never
-drop a `pixi.toml` next to a `pyproject.toml` that owns pixi. Every script is stdlib-only and runs
-under plain `python3` in all three cases, so the third costs nothing but a longer command.
+That also removes every conflict with the repository's own tooling: `pyproject.toml` is never read
+or written, the notebook's `pixi.toml` sits inside `doc_research/` where it cannot shadow anything,
+and the shipped `.gitignore` is scoped to the folder rather than appended to theirs. The scripts
+are stdlib-only and run from any working directory —
+`python3 doc_research/scripts/check.py` — so pixi is optional throughout.
 
-Two files in the installed notebook are the user's own and are never touched again: `TASTE.md`,
+Two files in the installed notebook belong to the user and are never touched again: `TASTE.md`,
 where the agent records how they want it to behave (and which overrides the shipped rules), and
-`FEEDBACK.md`, where the agent logs friction — what broke, in the user's own words, and which of
-our files is implicated — for them to send back to us.
+`FEEDBACK.md`, where the agent logs friction — what broke, in their own words, and which shipped
+file is implicated — for them to send back.
 
 ## Requirements
 
@@ -140,7 +147,7 @@ merge base is a pristine copy of the set vendored into `.instructions/baseline/`
 which also lets the set's own gate warn when a `template` file has been hand-edited.
 
 ```bash
-pixi run update      # or: bash scripts/doc_research/update.sh
+bash doc_research/scripts/update.sh
 ```
 
 It refuses to run on a dirty worktree and commits the result itself — conflict markers included —

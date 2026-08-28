@@ -6,6 +6,10 @@
 # project. It adds a lab book, a work log, a figure-caption discipline and a set
 # of Claude Code commands to a repository that already has code in it.
 #
+# Everything lands in a single doc_research/ folder. The only things placed at the
+# repository root are a short CLAUDE.md pointer and the hidden .claude/ directory,
+# because Claude Code reads both from the root and nowhere else.
+#
 # Usage, from inside the repository:
 #   curl -fsSL https://raw.githubusercontent.com/AlculatorProductions/agent-instructions/main/sets/doc_research/install.sh | bash
 #   ./install.sh [--target <dir>] [--yes]
@@ -60,29 +64,11 @@ git -C "$TARGET" rev-parse --git-dir >/dev/null 2>&1 \
 [ -z "$(git -C "$TARGET" status --porcelain)" ] \
   || die "you have uncommitted changes. Commit or stash them first, so this install is a single reviewable commit."
 
-# How the notebook's commands get wired up. pixi reads pixi.toml in preference to
-# pyproject.toml, so dropping one next to an existing [tool.pixi] would silently
-# shadow it. Three cases, none of which touches what is already configured:
-#
-#   toml       no [tool.pixi] anywhere      -> ship our standalone pixi.toml
-#   pyproject  [tool.pixi] but no tasks     -> append [tool.pixi.tasks] to hers
-#   none       [tool.pixi.tasks] exists     -> no pixi wiring; plain python3
-#
-# The scripts are stdlib-only and run under python3 regardless, so `none` costs
-# nothing but two keystrokes.
-PIXI_MODE="toml"
-if [ -f "$TARGET/pyproject.toml" ] && grep -q '^\[tool\.pixi' "$TARGET/pyproject.toml"; then
-  if grep -q '^\[tool\.pixi\.tasks\]' "$TARGET/pyproject.toml"; then
-    PIXI_MODE="none"
-  else
-    PIXI_MODE="pyproject"
-  fi
-fi
 echo "repository ok: $TARGET"
-case "$PIXI_MODE" in
-  pyproject) echo "pixi: your pyproject.toml owns it — the notebook's tasks will be appended to it" ;;
-  none)      echo "pixi: your pyproject.toml already defines [tool.pixi.tasks] — leaving pixi alone" ;;
-esac
+
+# Nothing to negotiate about pixi any more: the notebook's pixi.toml lives inside
+# doc_research/, so pixi at the repository root keeps using whatever manifest is
+# already there. Nothing in pyproject.toml is read, written or shadowed.
 
 # --- locate the set: local clone if possible, else download ------------------
 
@@ -115,7 +101,6 @@ fi
 # Files of the set that are never installed into the target repository.
 skip_file() {
   case "$1" in install.sh|.gitignore|.git/*|*/.DS_Store|*/__pycache__/*) return 0 ;; esac
-  [ "$1" = "pixi.toml" ] && [ "$PIXI_MODE" != "toml" ] && return 0
   return 1
 }
 
@@ -147,7 +132,7 @@ for rel in "${NEW[@]}"; do
   mkdir -p "$TARGET/$(dirname "$rel")"
   cp "$SRC/$rel" "$TARGET/$rel"
 done
-chmod +x "$TARGET/scripts/doc_research/update.sh" "$TARGET/scripts/doc_research/friday.sh" 2>/dev/null || true
+chmod +x "$TARGET/doc_research/scripts/update.sh" "$TARGET/doc_research/scripts/friday.sh" 2>/dev/null || true
 
 # The pristine copy that makes future three-way merges possible.
 mkdir -p "$TARGET/.instructions/baseline"
@@ -155,27 +140,6 @@ cp -R "$SRC/." "$TARGET/.instructions/baseline/"
 rm -f "$TARGET/.instructions/baseline/install.sh" "$TARGET/.instructions/baseline/.gitignore"
 rm -rf "$TARGET/.instructions/baseline/.instructions/baseline"
 find "$TARGET/.instructions/baseline" -name __pycache__ -type d -exec rm -rf {} + 2>/dev/null || true
-
-# Her pyproject.toml owns pixi: add task shortcuts and nothing else. Safe to
-# append because we only get here when [tool.pixi.tasks] does not yet exist, so
-# no table is duplicated and no task name can collide.
-if [ "$PIXI_MODE" = "pyproject" ]; then
-  cat >> "$TARGET/pyproject.toml" <<'PIXITASKS'
-
-# --- doc_research notebook ---------------------------------------------------
-# Task shortcuts only. Your dependencies, platforms and environments above are
-# untouched. Every one of these also runs directly, e.g.
-#   python3 scripts/doc_research/check.py
-[tool.pixi.tasks]
-check = "python3 scripts/doc_research/check.py"
-entries = "python3 scripts/doc_research/build_entries.py"
-week = "python3 scripts/doc_research/weekly.py"
-update = "bash scripts/doc_research/update.sh"
-labbook = "latexmk -pdf -interaction=nonstopmode labbook.tex"
-worklog = "latexmk -pdf -interaction=nonstopmode worklog.tex"
-PIXITASKS
-  echo "appended [tool.pixi.tasks] to your pyproject.toml"
-fi
 
 {
   echo "# Where this notebook's instructions came from. Written by install.sh / update.sh."
@@ -185,38 +149,12 @@ fi
   echo "set_version=$SET_VERSION"
   echo "installed=$(date +%Y-%m-%d)"
   echo "updated=$(date +%Y-%m-%d)"
-  echo "pixi=$PIXI_MODE"
 } > "$TARGET/.instructions-source"
 
-# Append to .gitignore rather than shipping one, so existing rules survive.
-if ! grep -q 'doc_research notebook' "$TARGET/.gitignore" 2>/dev/null; then
-  cat >> "$TARGET/.gitignore" <<'IGNORE'
+# No .gitignore of yours is touched: the notebook ships its own inside
+# doc_research/, which git applies to that folder only.
 
-# --- doc_research notebook ---------------------------------------------------
-# The notebook's own scripts import each other, so they leave a __pycache__ that
-# would otherwise make the tree dirty and block `pixi run update`.
-__pycache__/
-*.py[cod]
-.pixi/
-labbook.pdf
-worklog.pdf
-*.aux
-*.bbl
-*.bcf
-*.blg
-*.fdb_latexmk
-*.fls
-*.lof
-*.lot
-*.out
-*.run.xml
-*.synctex.gz
-*.toc
-IGNORE
-  echo "appended a block to .gitignore"
-fi
-
-python3 "$TARGET/scripts/doc_research/build_entries.py" >/dev/null 2>&1 || true
+python3 "$TARGET/doc_research/scripts/build_entries.py" >/dev/null 2>&1 || true
 
 step "Committing"
 git -C "$TARGET" add -A
@@ -238,24 +176,21 @@ if [ "${#COLLIDE[@]}" -gt 0 ]; then
   echo "summary prompt to work."
 fi
 
-if [ "$PIXI_MODE" = "toml" ]; then
-  HOWTO="  pixi run check       # or: python3 scripts/doc_research/check.py"
-elif [ "$PIXI_MODE" = "pyproject" ]; then
-  HOWTO="  pixi run check       # added to your pyproject.toml, alongside your own tasks"
-else
-  HOWTO="  python3 scripts/doc_research/check.py
-                       # your pyproject.toml already defines [tool.pixi.tasks], so
-                       # no pixi tasks were added. Everything runs like this."
-fi
-
 step "Done"
 cat <<EOF
 
-You already have Claude Code in VS Code, so there is nothing to install.
+Everything the notebook owns is in doc_research/. At the repository root there is
+only a short CLAUDE.md pointer and the hidden .claude/ directory, both of which
+Claude Code reads from the root and nowhere else.
 
-Running the notebook's commands:
+Claude Code is already set up, so there is nothing to install.
 
-$HOWTO
+The notebook's commands run from anywhere in the repository:
+
+  python3 doc_research/scripts/check.py        # the gate
+  python3 doc_research/scripts/weekly.py       # start this week's summary
+
+(pixi is optional: cd doc_research && pixi run check.)
 
   1. Open this folder in VS Code and start Claude Code.
 
@@ -276,9 +211,9 @@ Two things worth knowing straight away:
   FEEDBACK.md When something does not work — you do not understand a plot, you
               correct the same thing twice, a command keeps failing — the agent
               writes it down here by itself, including which of our instructions
-              was at fault. It stays on your machine. Send the file to Gabriel
-              whenever you like and we fix it for everyone. Delete anything you
-              would rather not share.
+              was at fault. It stays on your machine. Send it back to whoever
+              set this notebook up whenever you like, and the instructions get
+              fixed for everyone. Delete anything you would rather not share.
 
 On any Friday, the agent offers to write up the week into worklog.pdf.
 

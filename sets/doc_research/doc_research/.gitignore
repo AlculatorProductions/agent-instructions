@@ -1,0 +1,31 @@
+# Applies to doc_research/ only, so nothing here can affect files of your own
+# elsewhere in the repository that happen to share an extension.
+#
+# TEMPLATE FILE — replaced on update.
+
+# The notebook's scripts import each other, so they leave a __pycache__ that
+# would otherwise make the tree dirty and block the updater.
+__pycache__/
+*.py[cod]
+
+# A local pixi environment, if one is created here.
+.pixi/
+
+# The PDFs are rebuilt from the .tex sources, which are the actual record.
+*.pdf
+
+# latexmk debris, including the per-file .aux that \include produces in
+# labbook/ and labbook/entries/.
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.lof
+*.lot
+*.out
+*.run.xml
+*.synctex.gz
+*.toc
