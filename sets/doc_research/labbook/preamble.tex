@@ -1,0 +1,63 @@
+% Shared preamble for labbook.tex and worklog.tex.
+%
+% TEMPLATE FILE — replaced on update. Do not edit; if something is missing here,
+% it is a FEEDBACK.md entry.
+%
+% Deliberately minimal. Figures are produced by Erin's own plotting code and
+% included as image files; no plotting package is loaded and no house style is
+% imposed on her code.
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{geometry}
+\usepackage[hidelinks]{hyperref}
+
+\geometry{margin=1in}
+\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
+\graphicspath{{figures/}}
+
+% Long run ids and file paths are the main source of overfull lines; let TeX
+% break typewriter text rather than run into the margin.
+\usepackage[htt]{hyphenat}
+\emergencystretch=3em
+\tolerance=1500
+
+% --------------------------------------------------------------------------- %
+% Macros used by entries. See labbook/00_rules.tex for what each one means.
+% --------------------------------------------------------------------------- %
+
+% \entryhead{date}{title}{what this was about, one sentence}
+\newcommand{\entryhead}[3]{%
+  \section{#1 --- #2}%
+  \noindent\textit{#3}\par\medskip%
+}
+
+% Provenance of a piece of code or a figure.
+\newcommand{\fromcode}[1]{\texttt{#1}}
+\newcommand{\atcommit}[1]{\texttt{#1}}
+
+% A transcription of handwritten work, reproduced as written.
+\newenvironment{transcription}%
+  {\par\medskip\noindent\textbf{Transcribed as written:}\par\nopagebreak\medskip}%
+  {\par\medskip}
+
+% Something in the handwriting that could not be read.
+\newcommand{\unreadable}[1]{\textcolor{red}{\texttt{[?~#1]}}}
+
+% A flagged possible error, and what was decided about it.
+% \flag{date}{what looks wrong}{evidence}{proposal}{decision}
+\newcommand{\flag}[5]{%
+  \par\medskip\noindent\fbox{\parbox{0.95\linewidth}{%
+    \textbf{Flagged #1.} #2\par\smallskip
+    \textit{Evidence:} #3\par\smallskip
+    \textit{Proposed:} #4\par\smallskip
+    \textbf{Decision:} #5}}\par\medskip%
+}
+
+% Status of a statement, where it matters.
+\newcommand{\unchecked}{\textcolor{red}{[unchecked]}}
+\newcommand{\checked}[1]{\textcolor{teal}{[checked #1]}}

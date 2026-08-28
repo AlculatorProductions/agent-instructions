@@ -1,0 +1,5 @@
+# This file governs the SET in this repository. It is not installed into the
+# target repository — install.sh appends a block to the existing .gitignore
+# there instead, so nothing of the user's is overwritten.
+__pycache__/
+*.py[cod]

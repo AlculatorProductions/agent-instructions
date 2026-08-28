@@ -1,0 +1,40 @@
+# Ownership of every file this notebook ships. Read by scripts/doc_research/update.sh
+# and by check.py. See UPDATING.md.
+#
+#   template  replaced outright on update. Never edit these.
+#   merge     three-way merged against the version originally installed.
+#   seed      written once at install, never touched again.
+#
+# Anything not listed here — labbook/entries/, calculations/, figures/, log/weekly/,
+# and all of Erin's own code — is invisible to the updater and cannot be modified
+# by it.
+#
+# Patterns are shell globs in which `*` also matches `/`, so `scripts/x/*` covers
+# nested paths. The LAST matching line wins.
+
+template  CLAUDE.md
+template  AGENTS.md
+template  UPDATING.md
+template  labbook/preamble.tex
+template  labbook/00_rules.tex
+template  labbook/README.md
+template  log/README.md
+template  calculations/README.md
+template  calculations/_template/*
+template  figures/README.md
+template  figures/_template.md
+template  scripts/doc_research/*
+template  .claude/commands/*
+
+merge     pixi.toml
+merge     .claude/settings.json
+
+seed      NOTEBOOK.md
+seed      TASTE.md
+seed      FEEDBACK.md
+seed      ONBOARDING.md
+seed      INDEX.md
+seed      labbook.tex
+seed      worklog.tex
+seed      labbook/entries.tex
+seed      log/weeks.tex

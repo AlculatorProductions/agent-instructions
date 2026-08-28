@@ -1,8 +1,9 @@
 # agent-instructions
 
-Instruction sets that turn an empty folder into an **agent-ready research repository** — a git
-repo whose structure, rules and workflows a coding agent (Codex, Claude Code, or anything else
-that reads `AGENTS.md`) can pick up cold. One command sets everything up.
+Instruction sets that make a repository **agent-ready** — structure, rules and workflows a coding
+agent (Codex, Claude Code, or anything else that reads `AGENTS.md`) can pick up cold. Some sets
+create a new repository from scratch; others install into one that already has code in it. One
+command either way.
 
 ## Quick start (macOS)
 
@@ -57,12 +58,42 @@ From a local clone of this repository the same script works offline: `./setup.sh
 
 ## The sets
 
-| Set | What it is |
-|---|---|
-| [ashkan](sets/ashkan/) | A research notebook for theoretical and computational physics: provenance-tagged notes, a gated LaTeX lab book, reproducible simulation runs, and a fork-able timeline. |
+| Set | What it is | Installed by |
+|---|---|---|
+| [ashkan](sets/ashkan/) | A research notebook for theoretical and computational physics: provenance-tagged notes, a gated LaTeX lab book, reproducible simulation runs, and a fork-able timeline. | `setup.sh` — creates a new repository |
+| [doc_research](sets/doc_research/) | A documentation layer for someone who already has a repository and Claude Code: an agent-written chronological lab book, a weekly work log, a figure-caption discipline, and provenance markers on agent-written code. | its own [`install.sh`](sets/doc_research/install.sh) — adds to an existing repository |
 
-Each set is self-documenting — its own `README.md` explains the layout, its `AGENTS.md` is the
-canonical rulebook for agents.
+Each set is self-documenting — its own `README.md` or `NOTEBOOK.md` explains the layout, and its
+`AGENTS.md` / `CLAUDE.md` is the canonical rulebook for agents.
+
+### doc_research: installing into a repository that already exists
+
+Run this **inside** the target repository:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/AlculatorProductions/agent-instructions/main/sets/doc_research/install.sh | bash
+```
+
+It refuses to run on a dirty worktree, never overwrites a file that already exists (collisions are
+listed at the end for an agent to reconcile), appends to `.gitignore` instead of replacing it, and
+lands everything in one commit that `git revert` undoes.
+
+It never fights whatever already owns pixi in the target repository:
+
+| what it finds | what it does |
+|---|---|
+| no `[tool.pixi]` | ships its own standalone `pixi.toml`; `pyproject.toml` untouched |
+| `[tool.pixi]`, no tasks | appends a `[tool.pixi.tasks]` table to `pyproject.toml` — tasks only, no dependencies or platforms — and ships no `pixi.toml` |
+| `[tool.pixi.tasks]` already present | leaves pixi alone entirely; commands run as `python3 scripts/doc_research/check.py` |
+
+The choice is recorded as `pixi=` in `.instructions-source` so later updates honour it and never
+drop a `pixi.toml` next to a `pyproject.toml` that owns pixi. Every script is stdlib-only and runs
+under plain `python3` in all three cases, so the third costs nothing but a longer command.
+
+Two files in the installed notebook are the user's own and are never touched again: `TASTE.md`,
+where the agent records how they want it to behave (and which overrides the shipped rules), and
+`FEEDBACK.md`, where the agent logs friction — what broke, in the user's own words, and which of
+our files is implicated — for them to send back to us.
 
 ## Requirements
 
@@ -75,19 +106,48 @@ canonical rulebook for agents.
 
 Create `sets/<name>/` with:
 
-- `AGENTS.md` at its root — the canonical agent rulebook; agents read it automatically.
+- `AGENTS.md` at its root — the canonical agent rulebook; agents read it automatically. For a set
+  aimed at Claude Code, put the rules in `CLAUDE.md` and make `AGENTS.md` a pointer to it.
 - an `ONBOARDING.md` checklist for one-time machine/user setup, written so an agent can execute
   it and told to delete itself when done.
+- `.instructions/manifest`, if the set should be updatable in place (see the next section).
+  Sets without one still install; they just cannot be updated automatically.
 - optionally, the placeholders `setup.sh` personalises: `name = "research-notebook"` in
   `pyproject.toml`, `\title{Research Notebook --- Lab Book}` and an empty `\author{}` in
   `labbook.tex`, and the H1 of `README.md`.
 
-Write the set as if it were the root of its own repository — that is what it becomes.
+Write the set as if it were the root of its own repository — that is what it becomes, or what it
+is merged into.
 
-## Updating an existing repository
+A set that installs into an existing repository (like `doc_research`) carries its own `install.sh`
+at the set root, and that file is excluded from what gets copied.
 
-Every generated repository carries `.instructions-source` (set name + source commit). For now,
-updates are manual: point your agent at this repository and ask it to compare and merge what
-changed since that commit. If this needs to scale, the plan is to move the sets to a
-[Copier](https://copier.readthedocs.io) template so `copier update` does three-way merges — the
-`.instructions-source` stamp preserves the information needed to migrate.
+## Updating an installed repository
+
+A set that ships an `.instructions/manifest` can be updated in place without touching anything the
+user wrote. `doc_research` does; `ashkan` does not yet.
+
+Every file the set ships is declared in the manifest as one of three classes:
+
+| class | on update |
+|---|---|
+| `template` | replaced outright — instructions, scripts, slash commands. Never edited by the user. |
+| `merge` | three-way merged against the version originally installed, via `git merge-file`. |
+| `seed` | written once at install, never touched again — the user's own files. |
+
+Anything **not** listed is invisible to the updater by construction and cannot be modified. The
+merge base is a pristine copy of the set vendored into `.instructions/baseline/` at install time,
+which also lets the set's own gate warn when a `template` file has been hand-edited.
+
+```bash
+pixi run update      # or: bash scripts/doc_research/update.sh
+```
+
+It refuses to run on a dirty worktree and commits the result itself — conflict markers included —
+so a single `git revert` undoes the whole update. Conflicts are reported by name with instructions
+for the agent to resolve; see the set's `UPDATING.md`.
+
+Structural changes that a file merge cannot express (moving content between files) need a
+migration script keyed on `set_version` in `.instructions-source`. If this ever outgrows a
+manifest plus `git merge-file`, [Copier](https://copier.readthedocs.io) is the escape hatch, and
+the `.instructions-source` stamp preserves what a migration would need.

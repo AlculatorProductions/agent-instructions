@@ -1,0 +1,37 @@
+# Standalone pixi manifest for the research notebook.
+#
+# Deliberately pixi.toml and not pyproject.toml: when a pixi.toml is present,
+# pixi reads it and ignores pyproject.toml entirely, so whatever packaging or
+# tooling config already lives in this repository is untouched.
+#
+# The environment is tiny on purpose — the notebook's own scripts are stdlib
+# only and run under plain `python3` if pixi is not installed at all. Your own
+# code keeps its own environment.
+
+[workspace]
+name = "research-notebook"
+channels = ["conda-forge"]
+platforms = ["osx-arm64", "linux-64"]
+
+[dependencies]
+python = ">=3.11"
+
+[tasks]
+# The gate: unchecked code, missing figure captions, entries out of order.
+# --write also rebuilds the include lists and refreshes INDEX.md.
+check = "python scripts/doc_research/check.py"
+
+# Regenerate labbook/entries.tex and log/weeks.tex from the directories.
+entries = "python scripts/doc_research/build_entries.py"
+
+# Start this week's summary from git history.
+week = "python scripts/doc_research/weekly.py"
+
+# Pull newer instructions from upstream. See UPDATING.md.
+update = "bash scripts/doc_research/update.sh"
+
+# The PDFs build with the SYSTEM TeX installation (MacTeX on macOS); TeX Live is
+# deliberately not pulled into the pixi environment.
+labbook = "latexmk -pdf -interaction=nonstopmode labbook.tex"
+worklog = "latexmk -pdf -interaction=nonstopmode worklog.tex"
+clean = "latexmk -C labbook.tex && latexmk -C worklog.tex"
