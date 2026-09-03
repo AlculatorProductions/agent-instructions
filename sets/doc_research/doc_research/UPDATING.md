@@ -1,6 +1,6 @@
 # UPDATING
 
-The instructions, scripts and slash commands in this notebook come from an upstream set. They can
+The instructions, scripts and slash commands in this notebook come from Scirce, upstream. They can
 be updated without touching a single line of your own work.
 
     bash doc_research/scripts/update.sh

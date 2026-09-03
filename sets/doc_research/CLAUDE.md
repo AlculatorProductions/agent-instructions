@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-This repository keeps a written research record alongside the code, in
+This repository keeps a written research record alongside the code — Scirce — in
 [doc_research/](doc_research/). Everything belonging to it lives in that one folder.
 
 **Read [doc_research/CLAUDE.md](doc_research/CLAUDE.md) at the start of every session, then
@@ -16,6 +16,5 @@ The short version, so that nothing is missed even if the file above is not loade
 - Preferences stated in the chat go into `doc_research/TASTE.md` and override these rules;
   things that do not work go into `doc_research/FEEDBACK.md`.
 
-```bash
-python3 doc_research/scripts/check.py       # the gate — run this before committing
-```
+Before committing, run `python3 doc_research/scripts/check.py`. That is for you, the agent —
+the researcher works through the chat and never needs to run anything.

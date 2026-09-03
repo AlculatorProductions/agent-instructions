@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# install.sh — add the doc_research notebook to an EXISTING git repository.
+# install.sh — add the Scirce research notebook to an EXISTING git repository.
 #
 # Unlike the generic setup.sh in this repository, this does not create a new
 # project. It adds a lab book, a work log, a figure-caption discipline and a set
@@ -179,18 +179,16 @@ fi
 step "Done"
 cat <<EOF
 
-Everything the notebook owns is in doc_research/. At the repository root there is
-only a short CLAUDE.md pointer and the hidden .claude/ directory, both of which
-Claude Code reads from the root and nowhere else.
+Everything Scirce owns is in doc_research/. At the repository root there is only
+a short CLAUDE.md pointer and the hidden .claude/ directory, both of which Claude
+Code reads from the root and nowhere else.
 
 Claude Code is already set up, so there is nothing to install.
 
-The notebook's commands run from anywhere in the repository:
-
-  python3 doc_research/scripts/check.py        # the gate
-  python3 doc_research/scripts/weekly.py       # start this week's summary
-
-(pixi is optional: cd doc_research && pixi run check.)
+You do not run anything yourself. Work in the Claude Code chat the way you
+already do — ask for code, paste a calculation, ask a question — and the record
+gets written as a side effect. The commands and the .tex files are the agent's
+job, not yours.
 
   1. Open this folder in VS Code and start Claude Code.
 
@@ -198,9 +196,14 @@ The notebook's commands run from anywhere in the repository:
 
         Work through ONBOARDING.md and finish any unchecked steps.
 
-     It will ask you two or three questions — how much documentation you want per
-     request, where your code lives, and how you make plots — and write the
-     answers into TASTE.md.
+     It asks a few questions — how much documentation you want per request, where
+     your code lives, how you make plots, and whether it should read the
+     repository once and write a short opening entry — then writes the answers
+     into TASTE.md.
+
+The lab book and the work log are nearly empty right now. That is the normal
+starting state: they fill up by themselves as you work, and after a few weeks
+they are worth reading.
 
 Two things worth knowing straight away:
 

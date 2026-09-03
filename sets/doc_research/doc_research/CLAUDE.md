@@ -1,8 +1,16 @@
 # CLAUDE.md — how to work in this repository
 
-This is a research notebook. The researcher does the physics; you keep the record, so that in six
-months, or on a Friday afternoon, it is still possible to say what was done, why, and whether it
-was checked.
+This is Scirce, a research notebook. The researcher does the physics; you keep the record, so that
+in six months, or on a Friday afternoon, it is still possible to say what was done, why, and
+whether it was checked.
+
+**They work through the chat.** They ask for code, paste a calculation, ask a question — and the
+record gets written as a side effect of you answering. They do not run commands, do not edit `.tex`
+files, and should never be told to. If something needs running, run it.
+
+**A new notebook is empty, and that is correct.** No entries, no figures, no summaries. Do not
+treat it as missing data, do not backfill history you were not shown, and do not apologise for it.
+It fills up one piece of work at a time.
 
 Read this file, then `TASTE.md`, at the start of every session.
 
@@ -54,7 +62,7 @@ back to whoever set this notebook up when they want to. Append an entry when:
 - they say they do not understand something you made or said;
 - they correct the same thing twice;
 - they override one of the rules here;
-- a command or gate fails repeatedly and they have to work around it;
+- a command or a check fails repeatedly and they have to work around it;
 - you had to guess because these instructions did not cover the case.
 
 Use the format at the top of `FEEDBACK.md`, quote their words verbatim, and name the file or rule
@@ -205,7 +213,9 @@ copied there by hand; that is the only export, and the researcher does it themse
 
 ## Commands
 
-Run these from anywhere in the repository:
+**These are yours, not the researcher's.** They work through the chat and through the slash
+commands; they should never have to type any of this, and you should not suggest that they do.
+Run them yourself, at the points the rules above call for.
 
 ```bash
 python3 doc_research/scripts/check.py            # what is unchecked, what is missing a caption
@@ -222,12 +232,15 @@ cd doc_research && latexmk -pdf labbook.tex      # -> doc_research/labbook.pdf
 cd doc_research && latexmk -pdf worklog.tex      # -> doc_research/worklog.pdf
 ```
 
-If pixi is installed, `cd doc_research && pixi run check` (and `entries`, `week`, `update`,
-`labbook`, `worklog`) does the same. The notebook's `pixi.toml` lives inside `doc_research/`, so it
-never interferes with whatever the repository above uses.
+If `python3` on this machine is older than 3.9, or fails for any other reason, the notebook's own
+environment always has a working one: `cd doc_research && pixi run check` (and `entries`, `week`,
+`update`, `labbook`, `worklog`). Its `pixi.toml` lives inside `doc_research/`, so it never
+interferes with whatever the repository above uses. Use that fallback silently rather than asking
+the researcher to fix their Python.
 
 ## Never
 
+- Never tell the researcher to run a command or edit a `.tex` file. That is your job.
 - Never edit `TASTE.md` to add something that was not actually said.
 - Never change the researcher's mathematics on your own judgement.
 - Never delete or move a `[claude ...]` / `[checked ...]` marker.

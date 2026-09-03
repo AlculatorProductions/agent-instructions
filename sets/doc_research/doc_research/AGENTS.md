@@ -1,6 +1,6 @@
 # AGENTS.md
 
-The rulebook for this repository is [CLAUDE.md](CLAUDE.md). Read it first, then
+This repository uses Scirce, a research notebook. Its rulebook is [CLAUDE.md](CLAUDE.md). Read it first, then
 [TASTE.md](TASTE.md), which overrides it.
 
 This file exists so that agents which look for `AGENTS.md` rather than `CLAUDE.md` find their way.

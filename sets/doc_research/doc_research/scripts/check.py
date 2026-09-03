@@ -1,12 +1,12 @@
-"""The gate: does the record still hang together?
+"""Does the record still hang together?
 
 Checks that lab book entries are well formed and in order, that every figure has
 a caption file a tired person could read, that the generated include lists are
 current, and that nothing shipped as a template has been quietly hand-edited.
 It also reports which agent-written code has not been checked yet.
 
-    python3 doc_research/scripts/check.py            # verify
-    python3 doc_research/scripts/check.py --write    # also refresh INDEX.md
+    python3 doc_research/scripts/check.py            # check
+    python3 doc_research/scripts/check.py --write    # check, and refresh INDEX.md
 
 TEMPLATE FILE — replaced on update. Stdlib only, on purpose: this must run in
 any checkout without installing anything. Exits 1 on an error; warnings and
@@ -15,11 +15,25 @@ notes never fail the run.
 
 from __future__ import annotations
 
+import sys
+
+# macOS ships Python 3.9; this file must keep working there and on anything
+# newer. If it ever does not, say so in one line instead of a traceback — and
+# name the escape hatch, since the notebook's own pixi environment always has a
+# recent Python.
+if sys.version_info < (3, 9):  # pragma: no cover
+    raise SystemExit(
+        "Scirce needs Python 3.9 or newer; this is "
+        f"{sys.version_info.major}.{sys.version_info.minor}. "
+        "Either use a newer python3, or run it through the notebook's own "
+        "environment: cd doc_research && pixi run check"
+    )
+
+
 import argparse
 import datetime as dt
 import re
 import subprocess
-import sys
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -421,10 +435,16 @@ def main() -> int:
     if args.write and write_index(entries, weeks, figures, unchecked):
         print("INDEX.md refreshed")
 
-    print(
-        f"\n{len(entries)} lab book entries, {len(weeks)} weekly summaries, "
-        f"{len(figures)} figures"
-    )
+    if not (entries or weeks or figures):
+        print(
+            "\nThe lab book and the work log are still empty. That is the normal "
+            "starting state — they fill up as work happens."
+        )
+    else:
+        print(
+            f"\n{len(entries)} lab book entries, {len(weeks)} weekly summaries, "
+            f"{len(figures)} figures"
+        )
     if unchecked or checked:
         print(f"agent-written code: {len(unchecked)} unchecked, {checked} checked")
         for marker in unchecked[:10]:
@@ -440,9 +460,12 @@ def main() -> int:
         print(f"error: {error}")
 
     if report.errors:
-        print(f"\n{len(report.errors)} error(s). The record is inconsistent.")
+        print(
+            f"\n{len(report.errors)} problem(s) found. The written record does not yet "
+            "match the work — the agent fixes these."
+        )
         return 1
-    print("\nok")
+    print("\nAll documentation checks passed.")
     return 0
 
 

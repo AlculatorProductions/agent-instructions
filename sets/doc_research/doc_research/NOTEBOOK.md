@@ -1,11 +1,23 @@
-# Research notebook
+# Scirce — your research notebook
 
 This folder keeps a written record of your work alongside the code, so that you can look back and
 find out what you did, why, and whether it was checked.
 
-Everything belonging to the notebook is in here. At the top of the repository there is only a short
-`CLAUDE.md` pointing at it, and the hidden `.claude/` folder — Claude Code reads both from there
-and nowhere else.
+**You work the way you already do.** Talk to Claude Code in the chat as normal — ask for code,
+paste a calculation, ask a question. The record gets written as a side effect. There are no
+commands for you to run and no files for you to fill in.
+
+## It starts empty, and fills up
+
+Right now `labbook.pdf` and `worklog.pdf` are nearly empty, and `figures/` and `calculations/` have
+nothing in them. **That is the correct starting state.** Nothing is missing and nothing is broken.
+
+They fill up as you work. Ask for a piece of code and an entry appears. Paste a calculation and it
+is transcribed. Make a plot and it gets an explanation written next to it. After a few weeks the
+lab book is worth reading; on day one it is nearly blank, and that is fine.
+
+You never write the `.tex` files by hand. The agent does that. If you ever open one and see `TODO`
+in it, that is the agent's own scaffolding, not a task for you.
 
 ## What is here
 
@@ -44,9 +56,9 @@ Anything the agent writes is marked:
 # [claude 2026-08-28] unchecked
 ```
 
-Once you have read it and are happy, say so — the marker becomes `# [checked <you> 2026-09-02]`.
-`python3 doc_research/scripts/check.py` lists everything still unchecked, and the weekly summary
-counts it, so the parts of the codebase you have not personally read stay visible.
+Once you have read it and are happy, say so in the chat — the marker becomes
+`# [checked <you> 2026-09-02]`. The weekly summary counts what is still unchecked, so the parts of
+the codebase you have not personally read stay visible.
 
 ## Your calculations
 
@@ -59,5 +71,5 @@ and whichever way you decide is recorded.
 
 ## If you get stuck
 
-Ask the agent. `CLAUDE.md` in this folder is the full rulebook if you ever want to see what it has
-been told.
+Ask the agent, in the chat. `CLAUDE.md` in this folder is the full rulebook if you ever want to see
+what it has been told.

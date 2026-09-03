@@ -28,6 +28,29 @@ Each step is safe to re-run.
 
 - [ ] **Explain `TASTE.md`.** You change how the agent behaves by saying so in the chat.
 
+- [ ] **Say that it starts empty.** In one or two sentences: the lab book and the work log are
+      nearly blank right now, that is the normal starting state, and they fill up by themselves as
+      work happens. Nothing has to be filled in by hand — the `.tex` files are written by the
+      agent, and a `TODO` inside one is the agent's own scaffolding, not a task for the researcher.
+
+- [ ] **Offer an initial read of the repository.** Ask:
+
+      > Would you like me to read through the repository once and write a short opening entry —
+      > what the code does, how it is laid out, what is already here? It is a starting point, not
+      > a full audit.
+
+      If yes: read the code, then write **one** entry,
+      `labbook/entries/<today>-starting-point.tex`, of at most a page. What the project is, the
+      main components and where they live, anything already documented, and what is conspicuously
+      undocumented. Tag every claim you inferred rather than read — this entry is orientation, not
+      established fact. Do not transcribe mathematics you have not been shown, and do not add
+      `[claude ...]` markers to code you did not write.
+
+      If no: write nothing.
+
+      Either way, say the same closing line: from here on, the work gets documented as it
+      happens — the record starts now, and this is what it starts from.
+
 - [ ] **Environment (optional).** `cd doc_research && pixi install`, if pixi is available. The
       scripts also run with plain `python3`, so this is convenience, not a requirement.
 
@@ -35,6 +58,6 @@ Each step is safe to re-run.
       `brew install --cask mactex`). Check with `cd doc_research && latexmk -pdf labbook.tex`. If
       TeX is missing, say so and carry on — the `.tex` record is still being written.
 
-- [ ] **Gate.** `python3 doc_research/scripts/check.py` passes.
+- [ ] **Checks pass.** `python3 doc_research/scripts/check.py` reports no problems.
 
 - [ ] **Finish.** Delete this file and commit.

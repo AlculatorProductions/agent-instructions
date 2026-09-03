@@ -1,4 +1,4 @@
-# Standalone pixi manifest for the research notebook.
+# Standalone pixi manifest for the Scirce research notebook.
 #
 # It lives inside doc_research/, so it cannot collide with whatever manifest the
 # repository above already has: pixi at the repository root keeps using that one,
@@ -11,7 +11,7 @@
 # environment.
 
 [workspace]
-name = "research-notebook"
+name = "scirce-notebook"
 channels = ["conda-forge"]
 platforms = ["osx-arm64", "linux-64"]
 

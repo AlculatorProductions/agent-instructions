@@ -15,8 +15,22 @@ any checkout without installing anything.
 
 from __future__ import annotations
 
-import re
 import sys
+
+# macOS ships Python 3.9; this file must keep working there and on anything
+# newer. If it ever does not, say so in one line instead of a traceback — and
+# name the escape hatch, since the notebook's own pixi environment always has a
+# recent Python.
+if sys.version_info < (3, 9):  # pragma: no cover
+    raise SystemExit(
+        "Scirce needs Python 3.9 or newer; this is "
+        f"{sys.version_info.major}.{sys.version_info.minor}. "
+        "Either use a newer python3, or run it through the notebook's own "
+        "environment: cd doc_research && pixi run check"
+    )
+
+
+import re
 from dataclasses import dataclass
 from pathlib import Path
 

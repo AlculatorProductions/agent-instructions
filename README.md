@@ -66,7 +66,7 @@ From a local clone of this repository the same script works offline: `./setup.sh
 Each set is self-documenting — its own `README.md` or `NOTEBOOK.md` explains the layout, and its
 `AGENTS.md` / `CLAUDE.md` is the canonical rulebook for agents.
 
-### doc_research: installing into a repository that already exists
+### doc_research (Scirce): installing into a repository that already exists
 
 Run this **inside** the target repository:
 
@@ -93,9 +93,13 @@ directory, because Claude Code reads both from the root and nowhere else:
 
 That also removes every conflict with the repository's own tooling: `pyproject.toml` is never read
 or written, the notebook's `pixi.toml` sits inside `doc_research/` where it cannot shadow anything,
-and the shipped `.gitignore` is scoped to the folder rather than appended to theirs. The scripts
-are stdlib-only and run from any working directory —
-`python3 doc_research/scripts/check.py` — so pixi is optional throughout.
+and the shipped `.gitignore` is scoped to the folder rather than appended to theirs.
+
+The scripts are stdlib-only and run on **Python 3.9 and up** — the version macOS itself ships — so
+no interpreter has to be installed; if `python3` is older or broken, the notebook's own pixi
+environment is the documented fallback. They are the *agent's* commands, not the researcher's: the
+researcher works entirely through the Claude Code chat and never runs anything or edits a `.tex`
+file.
 
 Two files in the installed notebook belong to the user and are never touched again: `TASTE.md`,
 where the agent records how they want it to behave (and which overrides the shipped rules), and
